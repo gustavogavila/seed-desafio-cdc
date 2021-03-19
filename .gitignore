@@ -2,6 +2,12 @@
 # Created by https://www.toptal.com/developers/gitignore/api/linux,intellij,java-web,java
 # Edit at https://www.toptal.com/developers/gitignore?templates=linux,intellij,java-web,java
 
+HELP.md
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
