@@ -1,6 +1,7 @@
 package com.gusta.casadocodigo.novacategoria;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.gusta.casadocodigo.compartilhado.UniqueValue;
 
 import javax.validation.constraints.NotBlank;
 
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 public class NovaCategoriaRequest {
 
     @NotBlank
+    @UniqueValue(domainClass = Categoria.class, fieldName = "nome")
     private String nome;
 
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)

@@ -11,21 +11,12 @@ import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
 @RestController
-// TOTAL = 3 PONTOS
+// TOTAL = 2 PONTOS
 @RequestMapping(value = "novos-autores")
 public class NovoAutorController {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private EmailUnicoAutorValidator emailUnicoAutorValidator;
-
-    @InitBinder
-    public void init(WebDataBinder binder) {
-        // 1 acoplamento contextual EmailUnicoAutorValidator
-        binder.addValidators(emailUnicoAutorValidator);
-    }
 
     // 1 acoplamento contextual NovoAutorRequest
     @PostMapping

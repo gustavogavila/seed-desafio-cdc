@@ -1,10 +1,11 @@
 package com.gusta.casadocodigo.novacategoria;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,14 +17,6 @@ public class NovaCategoriaController {
 
     @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    private NomeUnicoCategoriaValidator nomeUnicoCategoriaValidator;
-
-    @InitBinder
-    public void init(WebDataBinder binder) {
-        binder.addValidators(nomeUnicoCategoriaValidator);
-    }
 
     @PostMapping
     @Transactional
