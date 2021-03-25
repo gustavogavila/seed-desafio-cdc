@@ -2,16 +2,14 @@ package com.gusta.casadocodigo.novolivro;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
+import java.util.List;
 
-// 2
+// 3
 @RestController
 @RequestMapping(value = "novos-livros")
 public class NovoLivroController {
@@ -27,5 +25,14 @@ public class NovoLivroController {
         Livro livro = request.toModel(entityManager);
         entityManager.persist(livro);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    // 1
+    public ResponseEntity<List<LivroResponse>> pegarTodos() {
+        List<LivroResponse> resultList = entityManager
+                .createQuery("SELECT NEW com.gusta.casadocodigo.novolivro.LivroResponse(l.id, l.titulo) FROM Livro l", LivroResponse.class)
+                .getResultList();
+        return ResponseEntity.ok(resultList);
     }
 }
