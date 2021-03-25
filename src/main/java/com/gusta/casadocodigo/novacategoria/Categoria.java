@@ -22,13 +22,4 @@ public class Categoria {
     public Categoria(@NotBlank String nome) {
         this.nome = nome;
     }
-
-    public static Categoria init() {
-        return new Categoria();
-    }
-
-    public Categoria comId(Long id) {
-        this.id = id;
-        return this;
-    }
 }

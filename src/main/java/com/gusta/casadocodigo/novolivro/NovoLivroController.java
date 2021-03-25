@@ -11,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 
+// 2
 @RestController
 @RequestMapping(value = "novos-livros")
 public class NovoLivroController {
@@ -20,8 +21,10 @@ public class NovoLivroController {
 
     @PostMapping
     @Transactional
+    // 1
     public ResponseEntity<Void> criar(@RequestBody @Valid NovoLivroRequest request) {
-        Livro livro = request.toModel();
+        // 1
+        Livro livro = request.toModel(entityManager);
         entityManager.persist(livro);
         return ResponseEntity.ok().build();
     }

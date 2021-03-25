@@ -40,13 +40,4 @@ public class Autor {
         this.descricao = descricao;
         this.criadoEm = Instant.now();
     }
-
-    public static Autor init() {
-        return new Autor();
-    }
-
-    public Autor comId(Long id) {
-        this.id = id;
-        return this;
-    }
 }

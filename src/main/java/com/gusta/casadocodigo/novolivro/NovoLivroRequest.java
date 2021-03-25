@@ -1,14 +1,20 @@
 package com.gusta.casadocodigo.novolivro;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.gusta.casadocodigo.compartilhado.ExistsId;
 import com.gusta.casadocodigo.compartilhado.UniqueValue;
 import com.gusta.casadocodigo.novacategoria.Categoria;
 import com.gusta.casadocodigo.novoautor.Autor;
+import org.springframework.util.Assert;
 
+import javax.persistence.EntityManager;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import static java.util.Objects.nonNull;
+
+// 4
 public class NovoLivroRequest {
 
     @NotBlank
@@ -38,9 +44,11 @@ public class NovoLivroRequest {
     private LocalDateTime dataPublicacao;
 
     @NotNull
+    @ExistsId(domainClass = Categoria.class)
     private Long categoriaId;
 
     @NotNull
+    @ExistsId(domainClass = Autor.class)
     private Long autorId;
 
     public NovoLivroRequest(@NotBlank String titulo, @NotBlank @Size(max = 500) String resumo, String sumario,
@@ -58,15 +66,26 @@ public class NovoLivroRequest {
         this.autorId = autorId;
     }
 
-    public Livro toModel() {
+    public Livro toModel(EntityManager entityManager) {
+        // 1
+        @NotNull Categoria categoria = entityManager.find(Categoria.class, categoriaId);
+
+        // 1
+        @NotNull Autor autor = entityManager.find(Autor.class, autorId);
+
+        Assert.state(nonNull(categoria), "A categoria de id = " + categoriaId + " não existe na base de dados");
+        Assert.state(nonNull(autor), "O autor de id = " + autorId + " não existe na base de dados");
+
+        // 1
+        // 1
         return new Livro.LivroBuilder(titulo, isbn)
                 .comResumo(resumo)
                 .comPreco(preco)
                 .comNumeroDePaginas(numeroDePaginas)
                 .comDataPublicacao(dataPublicacao)
                 .comSumario(sumario)
-                .comCategoria(Categoria.init().comId(categoriaId))
-                .comAutor(Autor.init().comId(autorId))
+                .comCategoria(categoria)
+                .comAutor(autor)
                 .build();
     }
 }

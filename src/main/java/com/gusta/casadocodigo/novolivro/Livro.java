@@ -4,6 +4,7 @@ import com.gusta.casadocodigo.novacategoria.Categoria;
 import com.gusta.casadocodigo.novoautor.Autor;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -104,12 +105,12 @@ public class Livro {
             return this;
         }
 
-        public LivroBuilder comCategoria(Categoria categoria) {
+        public LivroBuilder comCategoria(@Valid Categoria categoria) {
             this.categoria = categoria;
             return this;
         }
 
-        public LivroBuilder comAutor(Autor autor) {
+        public LivroBuilder comAutor(@Valid Autor autor) {
             this.autor = autor;
             return this;
         }
