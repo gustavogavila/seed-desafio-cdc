@@ -50,21 +50,72 @@ public class Livro {
     public Livro() {
     }
 
-    public Livro(@NotBlank String titulo, @NotBlank @Size(max = 500) String resumo,
-                 @NotNull @DecimalMin("20.0") BigDecimal preco, @NotNull @Min(100) Integer numeroDePaginas,
-                 @NotBlank String isbn, @Future LocalDateTime dataPublicacao, @NotNull Categoria categoria,
-                 @NotNull Autor autor) {
-        this.titulo = titulo;
-        this.resumo = resumo;
-        this.preco = preco;
-        this.numeroDePaginas = numeroDePaginas;
-        this.isbn = isbn;
-        this.dataPublicacao = dataPublicacao;
-        this.categoria = categoria;
-        this.autor = autor;
+    private Livro(LivroBuilder builder) {
+        this.titulo = builder.titulo;
+        this.isbn = builder.isbn;
+        this.resumo = builder.resumo;
+        this.preco = builder.preco;
+        this.numeroDePaginas = builder.numeroDePaginas;
+        this.dataPublicacao = builder.dataPublicacao;
+        this.sumario = builder.sumario;
+        this.categoria = builder.categoria;
+        this.autor = builder.autor;
     }
 
-    public void setSumario(String sumario) {
-        this.sumario = sumario;
+    public static class LivroBuilder {
+        private String titulo;
+        private String isbn;
+
+        private String resumo;
+        private BigDecimal preco;
+        private int numeroDePaginas;
+        private LocalDateTime dataPublicacao;
+        private String sumario;
+        private Categoria categoria;
+        private Autor autor;
+
+        public LivroBuilder(String titulo, String isbn) {
+            this.titulo = titulo;
+            this.isbn = isbn;
+        }
+
+        public LivroBuilder comResumo(String resumo) {
+            this.resumo = resumo;
+            return this;
+        }
+
+        public LivroBuilder comPreco(BigDecimal preco) {
+            this.preco = preco;
+            return this;
+        }
+
+        public LivroBuilder comNumeroDePaginas(int numeroDePaginas) {
+            this.numeroDePaginas = numeroDePaginas;
+            return this;
+        }
+
+        public LivroBuilder comDataPublicacao(LocalDateTime dataPublicacao) {
+            this.dataPublicacao = dataPublicacao;
+            return this;
+        }
+
+        public LivroBuilder comSumario(String sumario) {
+            this.sumario = sumario;
+            return this;
+        }
+
+        public LivroBuilder comCategoria(Categoria categoria) {
+            this.categoria = categoria;
+            return this;
+        }
+
+        public LivroBuilder comAutor(Autor autor) {
+            this.autor = autor;
+            return this;
+        }
+
+        public Livro build() {
+            return new Livro(this);
+        }
     }
 }

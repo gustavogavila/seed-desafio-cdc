@@ -27,7 +27,7 @@ public class Categoria {
         return new Categoria();
     }
 
-    public Categoria withId(Long id) {
+    public Categoria comId(Long id) {
         this.id = id;
         return this;
     }

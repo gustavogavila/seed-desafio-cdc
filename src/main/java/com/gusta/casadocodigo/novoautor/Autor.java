@@ -45,7 +45,7 @@ public class Autor {
         return new Autor();
     }
 
-    public Autor withId(Long id) {
+    public Autor comId(Long id) {
         this.id = id;
         return this;
     }

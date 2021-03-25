@@ -4,12 +4,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gusta.casadocodigo.compartilhado.UniqueValue;
 import com.gusta.casadocodigo.novacategoria.Categoria;
 import com.gusta.casadocodigo.novoautor.Autor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class NovoLivroRequest {
 
@@ -61,9 +59,14 @@ public class NovoLivroRequest {
     }
 
     public Livro toModel() {
-        Livro livro = new Livro(titulo, resumo, preco, numeroDePaginas, isbn, dataPublicacao,
-                Categoria.init().withId(categoriaId), Autor.init().withId(autorId));
-        livro.setSumario(sumario);
-        return livro;
+        return new Livro.LivroBuilder(titulo, isbn)
+                .comResumo(resumo)
+                .comPreco(preco)
+                .comNumeroDePaginas(numeroDePaginas)
+                .comDataPublicacao(dataPublicacao)
+                .comSumario(sumario)
+                .comCategoria(Categoria.init().comId(categoriaId))
+                .comAutor(Autor.init().comId(autorId))
+                .build();
     }
 }
