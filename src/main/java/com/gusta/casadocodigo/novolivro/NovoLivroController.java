@@ -11,7 +11,7 @@ import java.util.List;
 
 import static java.util.Objects.nonNull;
 
-// 4
+// 3
 @RestController
 @RequestMapping(value = "novos-livros")
 public class NovoLivroController {
@@ -36,17 +36,5 @@ public class NovoLivroController {
                 .createQuery("SELECT NEW com.gusta.casadocodigo.novolivro.LivroResponse(l.id, l.titulo) FROM Livro l", LivroResponse.class)
                 .getResultList();
         return ResponseEntity.ok(resultList);
-    }
-
-    @GetMapping("{id}")
-    // 1
-    public ResponseEntity<LivroDetalheParaSiteResponse> pegarPorId(@PathVariable Long id) {
-        Livro livro = entityManager
-                .createQuery("FROM Livro l WHERE id = :id", Livro.class)
-                .setParameter("id", id)
-                .getResultStream().findFirst().orElse(null);
-
-        LivroDetalheParaSiteResponse response = new LivroDetalheParaSiteResponse(livro);
-        return nonNull(livro) ? ResponseEntity.ok(response) : ResponseEntity.notFound().build();
     }
 }

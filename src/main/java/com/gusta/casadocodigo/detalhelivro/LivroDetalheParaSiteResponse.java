@@ -1,7 +1,9 @@
-package com.gusta.casadocodigo.novolivro;
+package com.gusta.casadocodigo.detalhelivro;
+
+import com.gusta.casadocodigo.novolivro.Livro;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class LivroDetalheParaSiteResponse {
     private Long id;
@@ -11,12 +13,8 @@ public class LivroDetalheParaSiteResponse {
     private BigDecimal preco;
     private Integer numeroDePaginas;
     private String isbn;
-    private LocalDateTime dataPublicacao;
-    private Long categoriaId;
-    private String categoriaNome;
-    private Long autorId;
-    private String autorNome;
-    private String autorDescricao;
+    private String dataPublicacao;
+    private AutorDetalheParaSiteResponse autor;
 
     public LivroDetalheParaSiteResponse(Livro livro) {
         this.id = livro.getId();
@@ -26,12 +24,8 @@ public class LivroDetalheParaSiteResponse {
         this.preco = livro.getPreco();
         this.numeroDePaginas = livro.getNumeroDePaginas();
         this.isbn = livro.getIsbn();
-        this.dataPublicacao = livro.getDataPublicacao();
-        this.categoriaId = livro.getCategoria().getId();
-        this.categoriaNome = livro.getCategoria().getNome();
-        this.autorId = livro.getAutor().getId();
-        this.autorNome = livro.getAutor().getNome();
-        this.autorDescricao = livro.getAutor().getDescricao();
+        this.dataPublicacao = livro.getDataPublicacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        this.autor = new AutorDetalheParaSiteResponse(livro.getAutor());
     }
 
     public Long getId() {
@@ -62,27 +56,11 @@ public class LivroDetalheParaSiteResponse {
         return isbn;
     }
 
-    public LocalDateTime getDataPublicacao() {
+    public String getDataPublicacao() {
         return dataPublicacao;
     }
 
-    public Long getCategoriaId() {
-        return categoriaId;
-    }
-
-    public String getCategoriaNome() {
-        return categoriaNome;
-    }
-
-    public Long getAutorId() {
-        return autorId;
-    }
-
-    public String getAutorNome() {
-        return autorNome;
-    }
-
-    public String getAutorDescricao() {
-        return autorDescricao;
+    public AutorDetalheParaSiteResponse getAutor() {
+        return autor;
     }
 }
