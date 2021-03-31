@@ -4,11 +4,11 @@ import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.persistence.Entity;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+// 3
 public class NovaCompra {
 
     private Long id;
@@ -36,8 +36,10 @@ public class NovaCompra {
     @NotBlank
     private String cidade;
 
+    // 1
     private Estado estado;
 
+    // 1
     @NotNull
     private Pais pais;
 
@@ -47,20 +49,56 @@ public class NovaCompra {
     @NotBlank
     private String cep;
 
-    public NovaCompra(@NotBlank @Email String email, @NotBlank String nome, @NotBlank String sobrenome,
-                      @NotBlank @CPF String documento, @NotBlank String endereco, @NotBlank String complemento,
-                      @NotBlank String cidade, Estado estado, @NotNull Pais pais, @NotBlank String telefone,
-                      @NotBlank String cep) {
-        this.email = email;
-        this.nome = nome;
-        this.sobrenome = sobrenome;
-        this.documento = documento;
-        this.endereco = endereco;
-        this.complemento = complemento;
-        this.cidade = cidade;
-        this.estado = estado;
-        this.pais = pais;
-        this.telefone = telefone;
-        this.cep = cep;
+    // 1
+    private NovaCompra(NovaCompraBuilder builder) {
+        this.email = builder.email;
+        this.nome = builder.nome;
+        this.sobrenome = builder.sobrenome;
+        this.documento = builder.documento;
+        this.endereco = builder.endereco;
+        this.complemento = builder.complemento;
+        this.cidade = builder.cidade;
+        this.pais = builder.pais;
+        this.telefone = builder.telefone;
+        this.cep = builder.cep;
+        this.estado = builder.estado;
+    }
+
+    public static class NovaCompraBuilder {
+
+        public String email;
+        public String nome;
+        public String sobrenome;
+        public String documento;
+        public String endereco;
+        public String complemento;
+        public String cidade;
+        public Pais pais;
+        public String telefone;
+        public String cep;
+        public Estado estado;
+
+        public NovaCompraBuilder(String email, String nome, String sobrenome, String documento, String endereco,
+                                 String complemento, String cidade, Pais pais, String telefone, String cep) {
+            this.email = email;
+            this.nome = nome;
+            this.sobrenome = sobrenome;
+            this.documento = documento;
+            this.endereco = endereco;
+            this.complemento = complemento;
+            this.cidade = cidade;
+            this.pais = pais;
+            this.telefone = telefone;
+            this.cep = cep;
+        }
+
+        public NovaCompraBuilder comEstado(Estado estado) {
+            this.estado = estado;
+            return this;
+        }
+
+        public NovaCompra build() {
+            return new NovaCompra(this);
+        }
     }
 }

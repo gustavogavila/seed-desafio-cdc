@@ -2,18 +2,18 @@ package com.gusta.casadocodigo.fluxopagamento;
 
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
+import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 import static java.util.Objects.nonNull;
 
+// 5
 public class NovaCompraRequest {
 
     @NotBlank
@@ -27,7 +27,7 @@ public class NovaCompraRequest {
     private String sobrenome;
 
     @NotBlank
-    @CPF
+    @CNPJ
     private String documento;
 
     @NotBlank
@@ -68,20 +68,30 @@ public class NovaCompraRequest {
     }
 
     public NovaCompra toModel(EntityManager em) {
+        // 1
         Pais pais = em.find(Pais.class, paisId);
-        Estado estado = em.find(Estado.class, estadoId);
-
-        List estados = em.createQuery("SELECT e FROM Estado e where e.pais = :pais")
-                .setParameter("pais", pais)
-                .getResultList();
 
         Assert.state(nonNull(pais), "O pais informado não existe: " + paisId);
-        Assert.state(nonNull(estados) && estados.size() > 0 && nonNull(estado),
-                "O estado informado não existe: " + paisId);
 
-        NovaCompra novaCompra = new NovaCompra(email, nome, sobrenome, documento, endereco, complemento, cidade,
-                estado, pais, telefone, cep);
+        // 2
+        NovaCompra.NovaCompraBuilder novaCompraBuilder = new NovaCompra.NovaCompraBuilder(email, nome, sobrenome, documento, endereco,
+                complemento, cidade, pais, telefone, cep);
 
-        return novaCompra;
+        // 2
+        if (nonNull(estadoId)) {
+            Estado estado = em.find(Estado.class, estadoId);
+            Assert.state(nonNull(estado), "O estado informado não existe: " + estadoId);
+            novaCompraBuilder.comEstado(estado);
+        }
+
+        return novaCompraBuilder.build();
+    }
+
+    public Long getPaisId() {
+        return paisId;
+    }
+
+    public Long getEstadoId() {
+        return estadoId;
     }
 }
