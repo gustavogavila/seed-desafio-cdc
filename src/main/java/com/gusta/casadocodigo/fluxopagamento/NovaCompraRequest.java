@@ -5,6 +5,7 @@ import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
+import org.hibernate.validator.group.GroupSequenceProvider;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
@@ -14,7 +15,9 @@ import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.nonNull;
 
-// 5
+// 6
+// 1
+@GroupSequenceProvider(NovaCompraGroupSequenceProvider.class)
 public class NovaCompraRequest {
 
     @NotBlank
@@ -27,8 +30,12 @@ public class NovaCompraRequest {
     @NotBlank
     private String sobrenome;
 
+    @NotNull
+    private TipoPessoa tipoPessoa;
+
     @NotBlank
-    @CNPJ
+    @CPF(groups = CpfGroup.class)
+    @CNPJ(groups = CnpjGroup.class)
     private String documento;
 
     @NotBlank
@@ -96,5 +103,9 @@ public class NovaCompraRequest {
 
     public Long getEstadoId() {
         return estadoId;
+    }
+
+    public TipoPessoa getTipoPessoa() {
+        return tipoPessoa;
     }
 }
