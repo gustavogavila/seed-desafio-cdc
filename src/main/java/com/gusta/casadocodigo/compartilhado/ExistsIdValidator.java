@@ -6,8 +6,7 @@ import javax.persistence.Query;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import java.util.stream.Collectors;
-
+import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
 
 public class ExistsIdValidator implements ConstraintValidator<ExistsId, Object> {
@@ -23,6 +22,9 @@ public class ExistsIdValidator implements ConstraintValidator<ExistsId, Object> 
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
+        if (isNull(value)) {
+            return true;
+        }
         Query query = entityManager.createQuery("select 1 from " + aClass.getName() + " where id =:value ");
         query.setParameter("value", value);
         Object singleResult = query.getResultStream().findFirst().orElse(null);

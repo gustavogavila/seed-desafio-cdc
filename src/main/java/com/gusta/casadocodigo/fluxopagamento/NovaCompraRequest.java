@@ -1,5 +1,6 @@
 package com.gusta.casadocodigo.fluxopagamento;
 
+import com.gusta.casadocodigo.compartilhado.ExistsId;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -39,9 +40,11 @@ public class NovaCompraRequest {
     @NotBlank
     private String cidade;
 
+    @ExistsId(domainClass = Estado.class)
     private Long estadoId;
 
     @NotNull
+    @ExistsId(domainClass = Pais.class)
     private Long paisId;
 
     @NotBlank
