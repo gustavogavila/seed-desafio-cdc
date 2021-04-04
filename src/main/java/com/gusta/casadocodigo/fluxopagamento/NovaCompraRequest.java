@@ -1,11 +1,10 @@
 package com.gusta.casadocodigo.fluxopagamento;
 
+import com.gusta.casadocodigo.compartilhado.Documento;
 import com.gusta.casadocodigo.compartilhado.ExistsId;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
-import org.hibernate.validator.constraints.br.CNPJ;
 import org.hibernate.validator.constraints.br.CPF;
-import org.hibernate.validator.group.GroupSequenceProvider;
 import org.springframework.util.Assert;
 
 import javax.persistence.EntityManager;
@@ -15,9 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import static java.util.Objects.nonNull;
 
-// 6
-// 1
-@GroupSequenceProvider(NovaCompraGroupSequenceProvider.class)
+// 5
 public class NovaCompraRequest {
 
     @NotBlank
@@ -30,12 +27,8 @@ public class NovaCompraRequest {
     @NotBlank
     private String sobrenome;
 
-    @NotNull
-    private TipoPessoa tipoPessoa;
-
     @NotBlank
-    @CPF(groups = CpfGroup.class)
-    @CNPJ(groups = CnpjGroup.class)
+    @Documento
     private String documento;
 
     @NotBlank
@@ -103,9 +96,5 @@ public class NovaCompraRequest {
 
     public Long getEstadoId() {
         return estadoId;
-    }
-
-    public TipoPessoa getTipoPessoa() {
-        return tipoPessoa;
     }
 }
