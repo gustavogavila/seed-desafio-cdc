@@ -1,4 +1,4 @@
-package com.gusta.casadocodigo.fluxopagamento;
+package com.gusta.casadocodigo.fluxopagamento.parte01;
 
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;

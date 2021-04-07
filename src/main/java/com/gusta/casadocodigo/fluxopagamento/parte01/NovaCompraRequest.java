@@ -1,7 +1,8 @@
-package com.gusta.casadocodigo.fluxopagamento;
+package com.gusta.casadocodigo.fluxopagamento.parte01;
 
 import com.gusta.casadocodigo.compartilhado.Documento;
 import com.gusta.casadocodigo.compartilhado.ExistsId;
+import com.gusta.casadocodigo.fluxopagamento.parte02.CarrinhoRequest;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CPF;
@@ -53,10 +54,13 @@ public class NovaCompraRequest {
     @NotBlank
     private String cep;
 
+    @NotNull
+    private CarrinhoRequest carrinho;
+
     public NovaCompraRequest(@NotBlank @Email String email, @NotBlank String nome, @NotBlank String sobrenome, 
                              @NotBlank @CPF String documento, @NotBlank String endereco, @NotBlank String complemento, 
                              @NotBlank String cidade, Long estadoId, @NotNull Long paisId, @NotBlank String telefone, 
-                             @NotBlank String cep) {
+                             @NotBlank String cep, @NotNull CarrinhoRequest carrinho) {
         this.email = email;
         this.nome = nome;
         this.sobrenome = sobrenome;
@@ -68,6 +72,7 @@ public class NovaCompraRequest {
         this.paisId = paisId;
         this.telefone = telefone;
         this.cep = cep;
+        this.carrinho = carrinho;
     }
 
     public NovaCompra toModel(EntityManager em) {
@@ -87,6 +92,8 @@ public class NovaCompraRequest {
             novaCompraBuilder.comEstado(estado);
         }
 
+        novaCompraBuilder.comCarrinho(carrinho.toModel(em));
+
         return novaCompraBuilder.build();
     }
 
@@ -96,5 +103,28 @@ public class NovaCompraRequest {
 
     public Long getEstadoId() {
         return estadoId;
+    }
+
+    @Override
+    public String toString() {
+        return "NovaCompraRequest{" +
+                "email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                ", sobrenome='" + sobrenome + '\'' +
+                ", documento='" + documento + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", complemento='" + complemento + '\'' +
+                ", cidade='" + cidade + '\'' +
+                ", estadoId=" + estadoId +
+                ", paisId=" + paisId +
+                ", telefone='" + telefone + '\'' +
+                ", cep='" + cep + '\'' +
+                ", total carrinho =" + carrinho.getTotal() +
+                ", total itens =" + carrinho.getItens().size() +
+                '}';
+    }
+
+    public CarrinhoRequest getCarrinhoRequest() {
+        return carrinho;
     }
 }

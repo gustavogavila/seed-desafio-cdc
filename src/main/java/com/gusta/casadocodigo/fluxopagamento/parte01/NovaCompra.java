@@ -1,9 +1,11 @@
-package com.gusta.casadocodigo.fluxopagamento;
+package com.gusta.casadocodigo.fluxopagamento.parte01;
 
+import com.gusta.casadocodigo.fluxopagamento.parte02.Carrinho;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CPF;
 
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -49,6 +51,9 @@ public class NovaCompra {
     @NotBlank
     private String cep;
 
+//    @OneToOne
+    private Carrinho carrinho;
+
     // 1
     private NovaCompra(NovaCompraBuilder builder) {
         this.email = builder.email;
@@ -62,6 +67,11 @@ public class NovaCompra {
         this.telefone = builder.telefone;
         this.cep = builder.cep;
         this.estado = builder.estado;
+        this.carrinho = builder.carrinho;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public static class NovaCompraBuilder {
@@ -77,6 +87,7 @@ public class NovaCompra {
         public String telefone;
         public String cep;
         public Estado estado;
+        public Carrinho carrinho;
 
         public NovaCompraBuilder(String email, String nome, String sobrenome, String documento, String endereco,
                                  String complemento, String cidade, Pais pais, String telefone, String cep) {
@@ -97,8 +108,32 @@ public class NovaCompra {
             return this;
         }
 
+        public NovaCompraBuilder comCarrinho(Carrinho carrinho) {
+            this.carrinho = carrinho;
+            return this;
+        }
+
         public NovaCompra build() {
             return new NovaCompra(this);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "NovaCompra{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", nome='" + nome + '\'' +
+                ", sobrenome='" + sobrenome + '\'' +
+                ", documento='" + documento + '\'' +
+                ", endereco='" + endereco + '\'' +
+                ", complemento='" + complemento + '\'' +
+                ", cidade='" + cidade + '\'' +
+                ", estado=" + estado +
+                ", pais=" + pais +
+                ", telefone='" + telefone + '\'' +
+                ", cep='" + cep + '\'' +
+                ", carrinho=" + carrinho.getItens().size() +
+                '}';
     }
 }
