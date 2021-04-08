@@ -7,7 +7,6 @@ import org.springframework.util.Assert;
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-import java.math.BigDecimal;
 
 import static java.util.Objects.nonNull;
 
@@ -27,21 +26,7 @@ public class ItemRequest {
         this.quantidade = quantidade;
     }
 
-    public Long getLivroId() {
-        return livroId;
-    }
-
-    public Integer getQuantidade() {
-        return quantidade;
-    }
-
     // 1
-    public BigDecimal getValor(EntityManager entityManager) {
-        Livro livro = entityManager.find(Livro.class, livroId);
-        Assert.state(nonNull(livro), "Nenhum livro encontrado com o id: " + livroId);
-        return livro.getPreco();
-    }
-
     public Item toModel(EntityManager em) {
         Livro livro = em.find(Livro.class, livroId);
         Assert.state(nonNull(livro), "Nenhum livro encontrado com o id: " + livroId);

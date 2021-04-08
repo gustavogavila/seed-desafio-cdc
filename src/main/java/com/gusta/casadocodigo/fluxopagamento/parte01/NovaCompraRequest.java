@@ -105,25 +105,6 @@ public class NovaCompraRequest {
         return estadoId;
     }
 
-    @Override
-    public String toString() {
-        return "NovaCompraRequest{" +
-                "email='" + email + '\'' +
-                ", nome='" + nome + '\'' +
-                ", sobrenome='" + sobrenome + '\'' +
-                ", documento='" + documento + '\'' +
-                ", endereco='" + endereco + '\'' +
-                ", complemento='" + complemento + '\'' +
-                ", cidade='" + cidade + '\'' +
-                ", estadoId=" + estadoId +
-                ", paisId=" + paisId +
-                ", telefone='" + telefone + '\'' +
-                ", cep='" + cep + '\'' +
-                ", total carrinho =" + carrinho.getTotal() +
-                ", total itens =" + carrinho.getItens().size() +
-                '}';
-    }
-
     public CarrinhoRequest getCarrinhoRequest() {
         return carrinho;
     }

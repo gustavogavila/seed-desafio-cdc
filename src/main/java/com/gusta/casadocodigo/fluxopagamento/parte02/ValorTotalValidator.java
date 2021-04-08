@@ -37,12 +37,19 @@ public class ValorTotalValidator implements Validator {
         // 1
         CarrinhoRequest carrinhoRequest = novaCompraRequest.getCarrinhoRequest();
 
-        BigDecimal valorTotalCalculado = carrinhoRequest.calcularValorTotal(entityManager);
+        // 1
+        Carrinho carrinho = carrinhoRequest.toModel(entityManager);
+        BigDecimal valorTotalCalculado = carrinho.getTotal();
 
         // 1
-        if (valorTotalCalculado.compareTo(carrinhoRequest.getTotal()) != 0) {
+        if (valorInformadoNaoConfereComValorCalculado(carrinhoRequest, valorTotalCalculado)) {
             errors.rejectValue("carrinhoRequest", "ValorTotalValidator",
                     "Valor total informado não corresponde ao valor total calculado");
         }
+    }
+
+    private boolean valorInformadoNaoConfereComValorCalculado(CarrinhoRequest carrinhoRequest,
+                                                              BigDecimal valorTotalCalculado) {
+        return valorTotalCalculado.compareTo(carrinhoRequest.getTotal()) != 0;
     }
 }

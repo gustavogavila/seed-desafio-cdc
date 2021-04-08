@@ -29,17 +29,9 @@ public class CarrinhoRequest {
         return total;
     }
 
-    public List<ItemRequest> getItens() {
-        return itens;
-    }
-
-    public BigDecimal calcularValorTotal(EntityManager entityManager) {
-        // 2
-        return itens.stream().map(item -> item.getValor(entityManager)).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
+    // 2
     public Carrinho toModel(EntityManager em) {
         List<Item> itens = this.itens.stream().map(item -> item.toModel(em)).collect(Collectors.toList());
-        return new Carrinho(total, itens);
+        return new Carrinho(itens);
     }
 }

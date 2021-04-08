@@ -43,10 +43,9 @@ public class NovaCompraController {
         // 1
         NovaCompra novaCompra = request.toModel(em);
 
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}/detalhe")
-//                .buildAndExpand(novaCompra.getId()).toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}/detalhe")
+                .buildAndExpand(novaCompra.getId()).toUri();
 
-//        return ResponseEntity.created(URI.create(uri.toString())).build();
-        return ResponseEntity.ok(novaCompra.toString());
+        return ResponseEntity.created(URI.create(uri.toString())).build();
     }
 }
