@@ -1,6 +1,5 @@
 package com.gusta.casadocodigo.fluxopagamento.parte01;
 
-import com.gusta.casadocodigo.fluxopagamento.parte02.ValorTotalValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.validation.Valid;
 import java.net.URI;
 
-// 4
+// 3
 @RestController
 @RequestMapping(value = "novas-compras")
 public class NovaCompraController {
@@ -26,13 +25,9 @@ public class NovaCompraController {
     @Autowired
     private EstadoObrigatorioValidator estadoObrigatorioValidator;
 
-    // 1
-    @Autowired
-    private ValorTotalValidator valorTotalValidator;
-
     @InitBinder
     public void init(WebDataBinder binder) {
-        binder.addValidators(estadoObrigatorioValidator, valorTotalValidator);
+        binder.addValidators(estadoObrigatorioValidator);
     }
 
     @PostMapping
@@ -42,6 +37,8 @@ public class NovaCompraController {
 
         // 1
         NovaCompra novaCompra = request.toModel(em);
+
+        em.persist(novaCompra);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}/detalhe")
                 .buildAndExpand(novaCompra.getId()).toUri();

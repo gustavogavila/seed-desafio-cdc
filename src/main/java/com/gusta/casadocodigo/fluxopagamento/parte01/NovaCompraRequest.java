@@ -2,6 +2,7 @@ package com.gusta.casadocodigo.fluxopagamento.parte01;
 
 import com.gusta.casadocodigo.compartilhado.Documento;
 import com.gusta.casadocodigo.compartilhado.ExistsId;
+import com.gusta.casadocodigo.fluxopagamento.parte02.Carrinho;
 import com.gusta.casadocodigo.fluxopagamento.parte02.CarrinhoRequest;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
@@ -12,6 +13,8 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
 
@@ -81,9 +84,11 @@ public class NovaCompraRequest {
 
         Assert.state(nonNull(pais), "O pais informado não existe: " + paisId);
 
+        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em);
+
         // 2
         NovaCompra.NovaCompraBuilder novaCompraBuilder = new NovaCompra.NovaCompraBuilder(email, nome, sobrenome, documento, endereco,
-                complemento, cidade, pais, telefone, cep);
+                complemento, cidade, pais, telefone, cep, novaCompraCarrinhoFunction);
 
         // 2
         if (nonNull(estadoId)) {
@@ -91,8 +96,6 @@ public class NovaCompraRequest {
             Assert.state(nonNull(estado), "O estado informado não existe: " + estadoId);
             novaCompraBuilder.comEstado(estado);
         }
-
-        novaCompraBuilder.comCarrinho(carrinho.toModel(em));
 
         return novaCompraBuilder.build();
     }

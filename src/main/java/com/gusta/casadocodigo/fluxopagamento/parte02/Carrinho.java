@@ -1,5 +1,9 @@
 package com.gusta.casadocodigo.fluxopagamento.parte02;
 
+import com.gusta.casadocodigo.fluxopagamento.parte01.NovaCompra;
+
+import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
@@ -7,11 +11,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-//@Entity
+@Entity
 public class Carrinho {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Positive
@@ -19,14 +23,20 @@ public class Carrinho {
 
     @NotNull
     @NotEmpty
+    @ElementCollection
     private List<Item> itens = new ArrayList<>();
+
+    @NotNull
+    @OneToOne
+    private NovaCompra novaCompra;
 
     @Deprecated
     public Carrinho() {
     }
 
-    public Carrinho(@NotNull @NotEmpty List<Item> itens) {
+    public Carrinho(@NotNull @Valid NovaCompra novaCompra, @NotNull @NotEmpty List<Item> itens) {
         this.itens = itens;
+        this.novaCompra = novaCompra;
         this.total = getTotal();
     }
 

@@ -5,13 +5,18 @@ import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CPF;
 
+import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.function.Function;
 
 // 3
+@Entity
 public class NovaCompra {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
@@ -38,10 +43,12 @@ public class NovaCompra {
     private String cidade;
 
     // 1
+    @ManyToOne
     private Estado estado;
 
     // 1
     @NotNull
+    @ManyToOne
     private Pais pais;
 
     @NotBlank
@@ -50,7 +57,7 @@ public class NovaCompra {
     @NotBlank
     private String cep;
 
-//    @OneToOne
+    @OneToOne(mappedBy = "novaCompra", cascade = CascadeType.PERSIST)
     private Carrinho carrinho;
 
     // 1
@@ -87,9 +94,11 @@ public class NovaCompra {
         public String cep;
         public Estado estado;
         public Carrinho carrinho;
+        public Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction;
 
         public NovaCompraBuilder(String email, String nome, String sobrenome, String documento, String endereco,
-                                 String complemento, String cidade, Pais pais, String telefone, String cep) {
+                                 String complemento, String cidade, Pais pais, String telefone, String cep,
+                                 Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction) {
             this.email = email;
             this.nome = nome;
             this.sobrenome = sobrenome;
@@ -100,6 +109,7 @@ public class NovaCompra {
             this.pais = pais;
             this.telefone = telefone;
             this.cep = cep;
+            this.novaCompraCarrinhoFunction = novaCompraCarrinhoFunction;
         }
 
         public NovaCompraBuilder comEstado(Estado estado) {
@@ -107,13 +117,10 @@ public class NovaCompra {
             return this;
         }
 
-        public NovaCompraBuilder comCarrinho(Carrinho carrinho) {
-            this.carrinho = carrinho;
-            return this;
-        }
-
         public NovaCompra build() {
-            return new NovaCompra(this);
+            NovaCompra novaCompra = new NovaCompra(this);
+            novaCompra.carrinho = this.novaCompraCarrinhoFunction.apply(novaCompra);
+            return novaCompra;
         }
     }
 
