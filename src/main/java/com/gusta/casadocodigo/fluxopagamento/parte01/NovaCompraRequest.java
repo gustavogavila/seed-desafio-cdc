@@ -2,6 +2,9 @@ package com.gusta.casadocodigo.fluxopagamento.parte01;
 
 import com.gusta.casadocodigo.compartilhado.Documento;
 import com.gusta.casadocodigo.compartilhado.ExistsId;
+import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDesconto;
+import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDescontoRepository;
+import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDescontoRequest;
 import com.gusta.casadocodigo.fluxopagamento.parte02.Carrinho;
 import com.gusta.casadocodigo.fluxopagamento.parte02.CarrinhoRequest;
 import com.gusta.casadocodigo.novoestado.Estado;
@@ -13,7 +16,7 @@ import javax.persistence.EntityManager;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
@@ -60,6 +63,8 @@ public class NovaCompraRequest {
     @NotNull
     private CarrinhoRequest carrinho;
 
+    private String codigoCupomDesconto;
+
     public NovaCompraRequest(@NotBlank @Email String email, @NotBlank String nome, @NotBlank String sobrenome, 
                              @NotBlank @CPF String documento, @NotBlank String endereco, @NotBlank String complemento, 
                              @NotBlank String cidade, Long estadoId, @NotNull Long paisId, @NotBlank String telefone, 
@@ -78,13 +83,13 @@ public class NovaCompraRequest {
         this.carrinho = carrinho;
     }
 
-    public NovaCompra toModel(EntityManager em) {
+    public NovaCompra toModel(EntityManager em, CupomDescontoRepository cupomDescontoRepository) {
         // 1
         Pais pais = em.find(Pais.class, paisId);
 
         Assert.state(nonNull(pais), "O pais informado não existe: " + paisId);
 
-        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em);
+        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em, cupomDescontoRepository, codigoCupomDesconto);
 
         // 2
         NovaCompra.NovaCompraBuilder novaCompraBuilder = new NovaCompra.NovaCompraBuilder(email, nome, sobrenome, documento, endereco,
@@ -96,6 +101,9 @@ public class NovaCompraRequest {
             Assert.state(nonNull(estado), "O estado informado não existe: " + estadoId);
             novaCompraBuilder.comEstado(estado);
         }
+
+
+
 
         return novaCompraBuilder.build();
     }
@@ -110,5 +118,9 @@ public class NovaCompraRequest {
 
     public CarrinhoRequest getCarrinhoRequest() {
         return carrinho;
+    }
+
+    public String getCodigoCupomDesconto() {
+        return codigoCupomDesconto;
     }
 }

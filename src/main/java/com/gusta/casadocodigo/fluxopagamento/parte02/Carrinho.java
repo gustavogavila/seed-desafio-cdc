@@ -1,5 +1,6 @@
 package com.gusta.casadocodigo.fluxopagamento.parte02;
 
+import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDesconto;
 import com.gusta.casadocodigo.fluxopagamento.parte01.NovaCompra;
 
 import javax.persistence.*;
@@ -46,5 +47,10 @@ public class Carrinho {
 
     public BigDecimal getTotal() {
         return itens.stream().map(item -> item.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal aplicarCupomDesconto(CupomDesconto cupomDesconto) {
+        Double percentualDesconto = cupomDesconto.getPercentualDesconto();
+        return total.subtract((BigDecimal.valueOf(percentualDesconto).divide(BigDecimal.valueOf(100))).multiply(total));
     }
 }

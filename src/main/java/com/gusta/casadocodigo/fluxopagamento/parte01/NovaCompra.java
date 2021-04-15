@@ -1,5 +1,6 @@
 package com.gusta.casadocodigo.fluxopagamento.parte01;
 
+import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDesconto;
 import com.gusta.casadocodigo.fluxopagamento.parte02.Carrinho;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
