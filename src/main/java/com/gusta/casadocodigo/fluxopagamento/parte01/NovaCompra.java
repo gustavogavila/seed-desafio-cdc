@@ -61,6 +61,8 @@ public class NovaCompra {
     @OneToOne(mappedBy = "novaCompra", cascade = CascadeType.PERSIST)
     private Carrinho carrinho;
 
+    private String codigoCupomDesconto;
+
     // 1
     private NovaCompra(NovaCompraBuilder builder) {
         this.email = builder.email;
@@ -79,6 +81,10 @@ public class NovaCompra {
 
     public Long getId() {
         return id;
+    }
+
+    public void associarCupomDesconto(CupomDesconto cupomDesconto) {
+        this.codigoCupomDesconto = cupomDesconto.getCodigo();
     }
 
     public static class NovaCompraBuilder {

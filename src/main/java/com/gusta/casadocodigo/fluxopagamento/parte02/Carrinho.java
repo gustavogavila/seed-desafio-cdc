@@ -49,8 +49,16 @@ public class Carrinho {
         return itens.stream().map(item -> item.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public BigDecimal aplicarCupomDesconto(CupomDesconto cupomDesconto) {
+    public NovaCompra getNovaCompra() {
+        return novaCompra;
+    }
+
+    public BigDecimal getTotalComCupomDesconto(CupomDesconto cupomDesconto) {
         Double percentualDesconto = cupomDesconto.getPercentualDesconto();
         return total.subtract((BigDecimal.valueOf(percentualDesconto).divide(BigDecimal.valueOf(100))).multiply(total));
+    }
+
+    public void aplicarCupomDescontoAoCarrinho(CupomDesconto cupomDesconto) {
+        this.total = getTotalComCupomDesconto(cupomDesconto);
     }
 }

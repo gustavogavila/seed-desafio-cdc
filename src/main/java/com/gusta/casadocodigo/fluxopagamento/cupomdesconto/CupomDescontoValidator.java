@@ -37,6 +37,10 @@ public class CupomDescontoValidator implements Validator {
 
         String codigoCupomDesconto = novaCompraRequest.getCodigoCupomDesconto();
 
+        if (isNull(codigoCupomDesconto) || codigoCupomDesconto.equals("")) {
+            return;
+        }
+
         CupomDesconto cupomExistente = cupomDescontoRepository.findByCodigo(codigoCupomDesconto).orElse(null);
 
         if (isNull(cupomExistente) || !cupomExistente.getCodigo().equals(codigoCupomDesconto)) {

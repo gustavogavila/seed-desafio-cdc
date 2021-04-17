@@ -34,10 +34,6 @@ public class CarrinhoRequest {
         this.itens = itens;
     }
 
-    public BigDecimal getTotal() {
-        return total;
-    }
-
     // 2
     public Function<NovaCompra, Carrinho> toModel(EntityManager em, CupomDescontoRepository cupomDescontoRepository,
                                                   String codigoCupomDesconto) {
@@ -46,20 +42,30 @@ public class CarrinhoRequest {
 
         return (novaCompra) -> {
             Carrinho carrinho = new Carrinho(novaCompra, itens);
-            BigDecimal valorReal = carrinho.getTotal().setScale(3, RoundingMode.HALF_UP);
+            BigDecimal valorReal = carrinho.getTotal();
+            BigDecimal valorInformado = total.setScale(3, RoundingMode.HALF_UP);;
 
-            // TODO: Finalizar a aplicação e associação do cupom de desconto à compra.
-            if (nonNull(codigoCupomDesconto)) {
+            if (nonNull(codigoCupomDesconto) && !codigoCupomDesconto.equals("")) {
                 CupomDesconto cupomDesconto = cupomDescontoRepository.findByCodigo(codigoCupomDesconto).orElse(null);
                 Assert.state(nonNull(cupomDesconto), "O cupom informado não foi encontrado : " + codigoCupomDesconto);
-                valorReal = carrinho.aplicarCupomDesconto(cupomDesconto).setScale(3, RoundingMode.HALF_UP);
+
+                valorReal = carrinho.getTotalComCupomDesconto(cupomDesconto).setScale(3, RoundingMode.HALF_UP);
+                verificarSeValorInformadoIgualValorReal(valorInformado, valorReal);
+                carrinho.aplicarCupomDescontoAoCarrinho(cupomDesconto);
+                carrinho.getNovaCompra().associarCupomDesconto(cupomDesconto);
+                return carrinho;
             }
 
-            BigDecimal valorInformado = total.setScale(3, RoundingMode.HALF_UP);
+            valorInformado = valorInformado.setScale(3, RoundingMode.HALF_UP);
+            valorReal = valorReal.setScale(3, RoundingMode.HALF_UP);
+            verificarSeValorInformadoIgualValorReal(valorInformado, valorReal);
 
-            Assert.isTrue(valorReal.compareTo(valorInformado) == 0,
-                    "O valor total informado não corresponde ao valor real");
             return carrinho;
         };
+    }
+
+    private void verificarSeValorInformadoIgualValorReal(BigDecimal valorInformado, BigDecimal valorReal) {
+        Assert.isTrue(valorReal.compareTo(valorInformado) == 0,
+                "O valor total informado não corresponde ao valor real");
     }
 }

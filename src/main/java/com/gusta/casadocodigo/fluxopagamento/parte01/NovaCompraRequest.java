@@ -89,7 +89,8 @@ public class NovaCompraRequest {
 
         Assert.state(nonNull(pais), "O pais informado não existe: " + paisId);
 
-        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em, cupomDescontoRepository, codigoCupomDesconto);
+        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em, cupomDescontoRepository,
+                codigoCupomDesconto);
 
         // 2
         NovaCompra.NovaCompraBuilder novaCompraBuilder = new NovaCompra.NovaCompraBuilder(email, nome, sobrenome, documento, endereco,
@@ -101,9 +102,6 @@ public class NovaCompraRequest {
             Assert.state(nonNull(estado), "O estado informado não existe: " + estadoId);
             novaCompraBuilder.comEstado(estado);
         }
-
-
-
 
         return novaCompraBuilder.build();
     }
