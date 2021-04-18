@@ -25,6 +25,10 @@ public class CupomDescontoAplicado {
     public CupomDescontoAplicado() {
     }
 
+    public CupomDesconto getCupomDesconto() {
+        return cupomDesconto;
+    }
+
     public CupomDescontoAplicado(CupomDesconto cupomDesconto) {
         this.cupomDesconto = cupomDesconto;
         this.percentualDescontoMomento = cupomDesconto.getPercentualDesconto();

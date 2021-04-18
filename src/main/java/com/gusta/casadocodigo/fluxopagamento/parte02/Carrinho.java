@@ -38,7 +38,7 @@ public class Carrinho {
     public Carrinho(@NotNull @Valid NovaCompra novaCompra, @NotNull @NotEmpty List<Item> itens) {
         this.itens = itens;
         this.novaCompra = novaCompra;
-        this.total = getTotal();
+        this.total = calcularTotal();
     }
 
     public List<Item> getItens() {
@@ -46,6 +46,10 @@ public class Carrinho {
     }
 
     public BigDecimal getTotal() {
+        return total;
+    }
+
+    public BigDecimal calcularTotal() {
         return itens.stream().map(item -> item.getValor()).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 

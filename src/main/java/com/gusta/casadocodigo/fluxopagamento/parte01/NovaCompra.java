@@ -12,7 +12,11 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.Optional;
 import java.util.function.Function;
+
+import static java.util.Objects.isNull;
 
 // 3
 @Entity
@@ -66,6 +70,10 @@ public class NovaCompra {
     @Embedded
     private CupomDescontoAplicado cupomDescontoAplicado;
 
+    @Deprecated
+    public NovaCompra() {
+    }
+
     // 1
     private NovaCompra(NovaCompraBuilder builder) {
         this.email = builder.email;
@@ -90,6 +98,17 @@ public class NovaCompra {
         Assert.isTrue(cupomDesconto.estaValido(), "O cupom está inválido");
         Assert.isNull(cupomDescontoAplicado, "Já existe um cupom aplicado e ele não pode ser trocado");
         this.cupomDescontoAplicado = new CupomDescontoAplicado(cupomDesconto);
+    }
+
+    public Optional<CupomDescontoAplicado> getCupomDescontoAplicado() {
+        return Optional.ofNullable(cupomDescontoAplicado);
+    }
+
+    public BigDecimal getValorFinal() {
+        if (isNull(cupomDescontoAplicado)) {
+            return carrinho.getTotal();
+        }
+        return carrinho.getTotalComCupomDesconto(cupomDescontoAplicado.getCupomDesconto());
     }
 
     public static class NovaCompraBuilder {
