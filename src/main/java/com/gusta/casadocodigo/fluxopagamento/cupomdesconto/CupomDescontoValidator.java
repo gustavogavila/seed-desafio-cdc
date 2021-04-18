@@ -6,15 +6,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
-
-
+// 6
 @Component
 public class CupomDescontoValidator implements Validator {
 
+    // 1
     private final CupomDescontoRepository cupomDescontoRepository;
 
     @Autowired
@@ -22,6 +20,7 @@ public class CupomDescontoValidator implements Validator {
         this.cupomDescontoRepository = cupomDescontoRepository;
     }
 
+    // 1
     @Override
     public boolean supports(Class<?> aClass) {
         return NovaCompraRequest.class.isAssignableFrom(aClass);
@@ -29,26 +28,32 @@ public class CupomDescontoValidator implements Validator {
 
     @Override
     public void validate(Object o, Errors errors) {
+        // 1
         if (errors.hasErrors()) {
             return;
         }
 
         NovaCompraRequest novaCompraRequest = (NovaCompraRequest) o;
 
-        String codigoCupomDesconto = novaCompraRequest.getCodigoCupomDesconto();
+        Optional<String> possivelCupomInformado = novaCompraRequest.getCodigoCupomDesconto();
 
-        if (isNull(codigoCupomDesconto) || codigoCupomDesconto.equals("")) {
+        // 1
+        if (!possivelCupomInformado.isPresent()) {
             return;
         }
 
-        CupomDesconto cupomExistente = cupomDescontoRepository.findByCodigo(codigoCupomDesconto).orElse(null);
+        // 1
+        Optional<CupomDesconto> possivelCupomExistente = cupomDescontoRepository.findByCodigo(possivelCupomInformado.get());
 
-        if (isNull(cupomExistente) || !cupomExistente.getCodigo().equals(codigoCupomDesconto)) {
-            errors.rejectValue("codigoCupomDesconto", "CupomDescontoInexistente", "Cupom informado não existe");
+        // 1
+        if (cumpomEstaInvalido(possivelCupomInformado, possivelCupomExistente)) {
+            errors.rejectValue("codigoCupomDesconto", "CupomDescontoInexistente", "Cupom informado inválido");
         }
+    }
 
-        if (nonNull(cupomExistente) && cupomExistente.getValidade().isBefore(LocalDateTime.now())) {
-            errors.rejectValue("codigoCupomDesconto", "CupomDescontoInvalido", "Cupom vencido");
-        }
+    private boolean cumpomEstaInvalido(Optional<String> possivelCupomInformado,
+                                       Optional<CupomDesconto> possivelCupomExistente) {
+        return possivelCupomExistente.filter(cupomDesconto -> !cupomDesconto.confereCom(possivelCupomInformado.get())
+                || !cupomDesconto.estaValido()).isPresent();
     }
 }

@@ -50,4 +50,12 @@ public class CupomDesconto {
     public Double getPercentualDesconto() {
         return percentualDesconto;
     }
+
+    public boolean estaValido() {
+        return getValidade().compareTo(LocalDateTime.now()) >= 0;
+    }
+
+    public boolean confereCom(String cupomInformado) {
+        return getCodigo().equals(cupomInformado);
+    }
 }

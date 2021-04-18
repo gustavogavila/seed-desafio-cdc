@@ -4,7 +4,6 @@ import com.gusta.casadocodigo.compartilhado.Documento;
 import com.gusta.casadocodigo.compartilhado.ExistsId;
 import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDesconto;
 import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDescontoRepository;
-import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDescontoRequest;
 import com.gusta.casadocodigo.fluxopagamento.parte02.Carrinho;
 import com.gusta.casadocodigo.fluxopagamento.parte02.CarrinhoRequest;
 import com.gusta.casadocodigo.novoestado.Estado;
@@ -21,7 +20,7 @@ import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
 
-// 5
+// 9
 public class NovaCompraRequest {
 
     @NotBlank
@@ -47,11 +46,11 @@ public class NovaCompraRequest {
     @NotBlank
     private String cidade;
 
-    @ExistsId(domainClass = Estado.class)
+    @ExistsId(domainClass = Estado.class, fieldName = "id")
     private Long estadoId;
 
     @NotNull
-    @ExistsId(domainClass = Pais.class)
+    @ExistsId(domainClass = Pais.class, fieldName = "id")
     private Long paisId;
 
     @NotBlank
@@ -60,9 +59,11 @@ public class NovaCompraRequest {
     @NotBlank
     private String cep;
 
+    // 1
     @NotNull
     private CarrinhoRequest carrinho;
 
+    @ExistsId(domainClass = CupomDesconto.class, fieldName = "codigo")
     private String codigoCupomDesconto;
 
     public NovaCompraRequest(@NotBlank @Email String email, @NotBlank String nome, @NotBlank String sobrenome, 
@@ -89,14 +90,19 @@ public class NovaCompraRequest {
 
         Assert.state(nonNull(pais), "O pais informado não existe: " + paisId);
 
+        // 1
+        // 1
         Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em, cupomDescontoRepository,
                 codigoCupomDesconto);
 
-        // 2
+        // 1
+        // 1
+        // 1 função como argumento
         NovaCompra.NovaCompraBuilder novaCompraBuilder = new NovaCompra.NovaCompraBuilder(email, nome, sobrenome, documento, endereco,
                 complemento, cidade, pais, telefone, cep, novaCompraCarrinhoFunction);
 
-        // 2
+        // 1
+        // 1
         if (nonNull(estadoId)) {
             Estado estado = em.find(Estado.class, estadoId);
             Assert.state(nonNull(estado), "O estado informado não existe: " + estadoId);
@@ -118,7 +124,7 @@ public class NovaCompraRequest {
         return carrinho;
     }
 
-    public String getCodigoCupomDesconto() {
-        return codigoCupomDesconto;
+    public Optional<String> getCodigoCupomDesconto() {
+        return Optional.ofNullable(codigoCupomDesconto);
     }
 }

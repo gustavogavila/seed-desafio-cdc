@@ -14,7 +14,7 @@ import static java.util.Objects.nonNull;
 public class ItemRequest {
 
     @NotNull
-    @ExistsId(domainClass = Livro.class)
+    @ExistsId(domainClass = Livro.class, fieldName = "id")
     private Long livroId;
 
     @NotNull

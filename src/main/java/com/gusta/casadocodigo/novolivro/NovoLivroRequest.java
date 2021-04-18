@@ -44,11 +44,11 @@ public class NovoLivroRequest {
     private LocalDateTime dataPublicacao;
 
     @NotNull
-    @ExistsId(domainClass = Categoria.class)
+    @ExistsId(domainClass = Categoria.class, fieldName = "id")
     private Long categoriaId;
 
     @NotNull
-    @ExistsId(domainClass = Autor.class)
+    @ExistsId(domainClass = Autor.class, fieldName = "id")
     private Long autorId;
 
     public NovoLivroRequest(@NotBlank String titulo, @NotBlank @Size(max = 500) String resumo, String sumario,

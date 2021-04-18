@@ -2,9 +2,11 @@ package com.gusta.casadocodigo.fluxopagamento.parte01;
 
 import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDesconto;
 import com.gusta.casadocodigo.fluxopagamento.parte02.Carrinho;
+import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDescontoAplicado;
 import com.gusta.casadocodigo.novoestado.Estado;
 import com.gusta.casadocodigo.novopais.Pais;
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -61,7 +63,8 @@ public class NovaCompra {
     @OneToOne(mappedBy = "novaCompra", cascade = CascadeType.PERSIST)
     private Carrinho carrinho;
 
-    private String codigoCupomDesconto;
+    @Embedded
+    private CupomDescontoAplicado cupomDescontoAplicado;
 
     // 1
     private NovaCompra(NovaCompraBuilder builder) {
@@ -84,7 +87,9 @@ public class NovaCompra {
     }
 
     public void associarCupomDesconto(CupomDesconto cupomDesconto) {
-        this.codigoCupomDesconto = cupomDesconto.getCodigo();
+        Assert.isTrue(cupomDesconto.estaValido(), "O cupom está inválido");
+        Assert.isNull(cupomDescontoAplicado, "Já existe um cupom aplicado e ele não pode ser trocado");
+        this.cupomDescontoAplicado = new CupomDescontoAplicado(cupomDesconto);
     }
 
     public static class NovaCompraBuilder {

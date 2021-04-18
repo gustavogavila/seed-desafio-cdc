@@ -4,6 +4,7 @@ import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDesconto;
 import com.gusta.casadocodigo.fluxopagamento.cupomdesconto.CupomDescontoRepository;
 import com.gusta.casadocodigo.fluxopagamento.parte01.NovaCompra;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.validation.constraints.NotEmpty;
@@ -45,7 +46,7 @@ public class CarrinhoRequest {
             BigDecimal valorReal = carrinho.getTotal();
             BigDecimal valorInformado = total.setScale(3, RoundingMode.HALF_UP);;
 
-            if (nonNull(codigoCupomDesconto) && !codigoCupomDesconto.equals("")) {
+            if (nonNull(codigoCupomDesconto) && StringUtils.hasText(codigoCupomDesconto)) {
                 CupomDesconto cupomDesconto = cupomDescontoRepository.findByCodigo(codigoCupomDesconto).orElse(null);
                 Assert.state(nonNull(cupomDesconto), "O cupom informado não foi encontrado : " + codigoCupomDesconto);
 
