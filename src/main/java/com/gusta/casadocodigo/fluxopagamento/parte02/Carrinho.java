@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,7 +60,9 @@ public class Carrinho {
 
     public BigDecimal getTotalComCupomDesconto(CupomDesconto cupomDesconto) {
         Double percentualDesconto = cupomDesconto.getPercentualDesconto();
-        return total.subtract((BigDecimal.valueOf(percentualDesconto).divide(BigDecimal.valueOf(100))).multiply(total));
+        return total.subtract((BigDecimal.valueOf(percentualDesconto)
+                .divide(BigDecimal.valueOf(100))).multiply(total))
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
     public void aplicarCupomDescontoAoCarrinho(CupomDesconto cupomDesconto) {

@@ -49,7 +49,7 @@ public class NovaCompraController {
 
         em.persist(novaCompra);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}/detalhe")
+        URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/detalhe-compra/{id}")
                 .buildAndExpand(novaCompra.getId()).toUri();
 
         return ResponseEntity.created(URI.create(uri.toString())).build();

@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Objects.nonNull;
+import static org.springframework.util.StringUtils.hasText;
 
 // 9
 public class NovaCompraRequest {
@@ -92,8 +93,7 @@ public class NovaCompraRequest {
 
         // 1
         // 1
-        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em, cupomDescontoRepository,
-                codigoCupomDesconto);
+        Function<NovaCompra, Carrinho> novaCompraCarrinhoFunction = this.carrinho.toModel(em);
 
         // 1
         // 1
@@ -109,7 +109,14 @@ public class NovaCompraRequest {
             novaCompraBuilder.comEstado(estado);
         }
 
-        return novaCompraBuilder.build();
+        NovaCompra novaCompra = novaCompraBuilder.build();
+
+        if (nonNull(codigoCupomDesconto) && hasText(codigoCupomDesconto)) {
+            Optional<CupomDesconto> possivelCupom = cupomDescontoRepository.findByCodigo(codigoCupomDesconto);
+            possivelCupom.ifPresent(cupom -> novaCompra.associarCupomDesconto(cupom));
+        }
+
+        return novaCompra;
     }
 
     public Long getPaisId() {
