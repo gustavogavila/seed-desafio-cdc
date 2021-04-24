@@ -1,5 +1,7 @@
 package com.gusta.casadocodigo.fluxopagamento.cupomdesconto;
 
+import org.springframework.util.Assert;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +36,8 @@ public class CupomDesconto {
 
     public CupomDesconto(@NotBlank String codigo, @NotNull @Positive Double percentualDesconto,
                          @NotNull @Future LocalDateTime validade) {
+        Assert.isTrue(validade.withSecond(0).compareTo(LocalDateTime.now().minusMinutes(1)) >= 0,
+                "A validade do cupom precisa ser maior ou igual a data atual");
         this.codigo = codigo;
         this.percentualDesconto = percentualDesconto;
         this.validade = validade;
@@ -52,7 +56,7 @@ public class CupomDesconto {
     }
 
     public boolean estaValido() {
-        return getValidade().compareTo(LocalDateTime.now()) >= 0;
+        return getValidade().compareTo(LocalDateTime.now().minusMinutes(1)) >= 0;
     }
 
     public boolean confereCom(String cupomInformado) {
