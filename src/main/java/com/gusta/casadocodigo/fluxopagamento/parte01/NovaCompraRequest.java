@@ -134,4 +134,12 @@ public class NovaCompraRequest {
     public Optional<String> getCodigoCupomDesconto() {
         return Optional.ofNullable(codigoCupomDesconto);
     }
+
+    public void setCodigoCupomDesconto(String codigoCupomDesconto) {
+        this.codigoCupomDesconto = codigoCupomDesconto;
+    }
+
+    public void setEstadoId(Long estadoId) {
+        this.estadoId = estadoId;
+    }
 }
