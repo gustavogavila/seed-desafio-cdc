@@ -12,7 +12,6 @@ import java.util.Optional;
 @Component
 public class CupomDescontoValidator implements Validator {
 
-    // 1
     private final CupomDescontoRepository cupomDescontoRepository;
 
     @Autowired
@@ -34,26 +33,18 @@ public class CupomDescontoValidator implements Validator {
         }
 
         NovaCompraRequest novaCompraRequest = (NovaCompraRequest) o;
-
         Optional<String> possivelCupomInformado = novaCompraRequest.getCodigoCupomDesconto();
 
         // 1
-        if (!possivelCupomInformado.isPresent()) {
-            return;
+        if (possivelCupomInformado.isPresent()) {
+            // 1
+            Optional<CupomDesconto> possivelCupomExistente = cupomDescontoRepository.findByCodigo(possivelCupomInformado.get());
+            // 1
+            possivelCupomExistente.ifPresent(cupomDesconto -> {
+                if(!cupomDesconto.estaValido()) {
+                    errors.rejectValue("codigoCupomDesconto", "CupomDescontoInexistente", "Cupom informado inválido");
+                }
+            });
         }
-
-        // 1
-        Optional<CupomDesconto> possivelCupomExistente = cupomDescontoRepository.findByCodigo(possivelCupomInformado.get());
-
-        // 1
-        if (cumpomEstaInvalido(possivelCupomInformado, possivelCupomExistente)) {
-            errors.rejectValue("codigoCupomDesconto", "CupomDescontoInexistente", "Cupom informado inválido");
-        }
-    }
-
-    private boolean cumpomEstaInvalido(Optional<String> possivelCupomInformado,
-                                       Optional<CupomDesconto> possivelCupomExistente) {
-        return possivelCupomExistente.filter(cupomDesconto -> !cupomDesconto.confereCom(possivelCupomInformado.get())
-                || !cupomDesconto.estaValido()).isPresent();
     }
 }
