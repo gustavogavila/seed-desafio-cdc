@@ -47,4 +47,35 @@ public class NovaCompraRequestTest {
         Mockito.verify(cupomDescontoRepository).findByCodigo("CODIGOCUPOM");
     }
 
+    @Test
+    void deveCriarCompraComEstadoESemCupomDesconto() {
+        request.setEstadoId(1L);
+
+        NovaCompra novaCompra = request.toModel(entityManager, cupomDescontoRepository);
+
+        Assertions.assertNotNull(novaCompra);
+        Mockito.verify(entityManager).find(Estado.class, 1L);
+        Mockito.verify(cupomDescontoRepository, Mockito.never()).findByCodigo(Mockito.anyString());
+    }
+
+    @Test
+    void deveCriarCompraSemEstadoEComCupom() {
+        request.setCodigoCupomDesconto("CODIGOCUPOM");
+
+        NovaCompra novaCompra = request.toModel(entityManager, cupomDescontoRepository);
+
+        Assertions.assertNotNull(novaCompra);
+        Mockito.verify(cupomDescontoRepository).findByCodigo("CODIGOCUPOM");
+        Mockito.verify(entityManager, Mockito.never()).find(Estado.class, 1L);
+    }
+
+    @Test
+    void deveCriarCompraSemEstadoESemCupom() {
+        NovaCompra novaCompra = request.toModel(entityManager, cupomDescontoRepository);
+
+        Assertions.assertNotNull(novaCompra);
+        Mockito.verify(entityManager, Mockito.never()).find(Estado.class, 1L);
+        Mockito.verify(cupomDescontoRepository, Mockito.never()).findByCodigo(Mockito.anyString());
+    }
+
 }
